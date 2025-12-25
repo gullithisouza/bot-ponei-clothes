@@ -1,0 +1,28 @@
+name: Release Automática
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v3
+
+      - name: 📦 Compactar arquivos importantes
+        run: zip -r bot-ponei-clothes-v${{github.run_number}}.zip
+
+      - name: 🚀 Criar Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "v${{ github.run_number }}"
+          name: "Release v${{ github.run_number }}"
+          files: bot-ponei-clothes-v${{github.run_number}}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
